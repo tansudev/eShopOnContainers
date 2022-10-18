@@ -1,6 +1,4 @@
-﻿using Microsoft.eShopOnContainers.Services.Ordering.Domain.Events;
-
-namespace Microsoft.eShopOnContainers.Services.Ordering.Domain.AggregatesModel.OrderAggregate;
+﻿namespace Microsoft.eShopOnContainers.Services.Ordering.Domain.AggregatesModel.OrderAggregate;
 
 public class Order
     : Entity, IAggregateRoot
@@ -143,6 +141,18 @@ public class Order
         _orderStatusId = OrderStatus.Shipped.Id;
         _description = "The order was shipped.";
         AddDomainEvent(new OrderShippedDomainEvent(this));
+    }
+
+    public void SetCompletedStatus()
+    {
+        if(_orderStatusId != OrderStatus.Shipped.Id)
+        {
+            StatusChangeException(OrderStatus.Completed);
+        }
+
+        _orderStatusId= OrderStatus.Completed.Id;
+        _description = "The order was completed";
+        AddDomainEvent(new OrderCompleteDomainEvent(this));
     }
 
     public void SetCancelledStatus()

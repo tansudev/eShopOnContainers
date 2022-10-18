@@ -45,8 +45,6 @@ public class OrderingService : IOrderingService
         return response;
     }
 
-
-
     async public Task CancelOrder(string orderId)
     {
         var order = new OrderDTO()
@@ -82,6 +80,26 @@ public class OrderingService : IOrderingService
         if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
         {
             throw new Exception("Error in ship order process, try later.");
+        }
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    async public Task CompleteOrder(string orderId)
+    {
+        var order = new OrderDTO()
+        {
+            OrderNumber = orderId
+        };
+
+        var uri = API.Order.CompleteOrder(_remoteServiceBaseUrl);
+        var orderContent = new StringContent(JsonSerializer.Serialize(order), System.Text.Encoding.UTF8, "application/json");
+
+        var response = await _httpClient.PutAsync(uri, orderContent);
+
+        if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+        {
+            throw new Exception("Error in complete order process, try later");
         }
 
         response.EnsureSuccessStatusCode();
