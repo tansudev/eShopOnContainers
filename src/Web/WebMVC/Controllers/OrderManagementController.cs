@@ -29,4 +29,15 @@ public class OrderManagementController : Controller
 
         return RedirectToAction("Index");
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Complete(string orderId,string actionCode)
+    {
+        if (OrderProcessAction.Complete.Code == actionCode)
+        {
+            await _orderSvc.CompleteOrder(orderId);
+        }
+        //Redirect to historic list.
+        return RedirectToAction("Index");
+    }
 }

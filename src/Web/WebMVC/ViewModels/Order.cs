@@ -73,6 +73,9 @@ public class Order
             case "paid":
                 actions.Add(OrderProcessAction.Ship);
                 break;
+            case "shipped":
+                actions.Add(OrderProcessAction.Complete);
+                break;
         }
 
         var result = new List<SelectListItem>();

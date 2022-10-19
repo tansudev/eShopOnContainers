@@ -3,13 +3,13 @@
 @model IEnumerable<Microsoft.eShopOnContainers.WebMVC.ViewModels.Order>
 
 @{
-     ViewData["Title"] = "My Orders";
-     var headerList = new List<Header>() {
+    ViewData["Title"] = "My Orders";
+    var headerList = new List<Header>() {
           new Header() { Controller = "Catalog", Text = "Back to catalog" } };
 }
 
 <div class="esh-orders">
-    <partial name="_Header" model="headerList"/>
+    <partial name="_Header" model="headerList" />
 
     <div class="container">
         <article class="esh-orders-titles row">
@@ -28,16 +28,38 @@
                 <section class="esh-orders-item col-2">$ @Html.DisplayFor(modelItem => item.Total)</section>
                 <section class="esh-orders-item col-2">@Html.DisplayFor(modelItem => item.Status)</section>
                 <section class="esh-orders-item col-2">
-                    <form asp-action="OrderProcess" id="orderForm+@item.OrderNumber" method="post">
-                        <input type="hidden" name="orderId" value="@item.OrderNumber" />
-                        <select name="actionCode" asp-items="@item.ActionCodeSelectList"
-                                disabled=@(item.Status != "paid")
-                                onchange="document.getElementById('orderForm+@item.OrderNumber').submit()">
-                            <option value="">&nbsp;&nbsp;Select Action</option>
-                            <option value="">------------------</option>
-                        </select>
-                    </form>
+                    @if (item.Status == "paid")
+                    {
+                        <form asp-action="OrderProcess" id="orderForm+@item.OrderNumber" method="post">
+                            <input type="hidden" name="orderId" value="@item.OrderNumber" />
+                            <select name="actionCode" asp-items="@item.ActionCodeSelectList"
+                            disabled=@(item.Status != "paid")
+                            onchange="document.getElementById('orderForm+@item.OrderNumber').submit()">
+                                <option value="">&nbsp;&nbsp;Select Action</option>
+                                <option value="">------------------</option>
+                            </select>
+                        </form>
+                    }
+                    else if (item.Status == "shipped")
+                    {
+                        <form asp-action="Complete" id="orderForm+@item.OrderNumber" method="post">
+                            <input type="hidden" name="orderId" value="@item.OrderNumber" />
+                            <select name="actionCode" asp-items="@item.ActionCodeSelectList"
+                            disabled=@(item.Status != "shipped")
+                            onchange="document.getElementById('orderForm+@item.OrderNumber').submit()">
+                                <option value="">&nbsp;&nbsp;Select Action</option>
+                                <option value="">------------------</option>
+                            </select>
+                        </form>
+                    }
                 </section>
+               @* <section class="esh-orders-item col-1">
+                    @if (item.Status.ToLower() == "shipped")
+                    {
+                        <a class="esh-orders-link" asp-controller="OrderManagement" asp-action="Complete" asp-route-orderId="@item.OrderNumber">Complete</a>
+
+                    }
+                </section>*@
             </article>
         }
     </div>

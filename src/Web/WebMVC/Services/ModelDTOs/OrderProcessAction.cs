@@ -6,6 +6,7 @@ public record OrderProcessAction
     public string Name { get; }
 
     public static OrderProcessAction Ship = new OrderProcessAction(nameof(Ship).ToLowerInvariant(), "Ship");
+    public static OrderProcessAction Complete = new OrderProcessAction(nameof(Complete).ToLowerInvariant(), "Complete");
 
     protected OrderProcessAction()
     {

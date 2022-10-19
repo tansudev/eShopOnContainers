@@ -59,16 +59,6 @@ public class OrderController : Controller
         return RedirectToAction("Index");
     }
 
-    public async Task<IActionResult> Complete(string orderId)
-    {
-
-        await _orderSvc.CompleteOrder(orderId);
-
-        //Redirect to historic list.
-        return RedirectToAction("Index");
-    }
-
-
     public async Task<IActionResult> Detail(string orderId)
     {
         var user = _appUserParser.Parse(HttpContext.User);
